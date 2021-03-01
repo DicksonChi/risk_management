@@ -107,11 +107,11 @@ FIXTURE_DIR = os.path.join(BASE_DIR, "fixtures")
 PAGE_CACHE_SECONDS = 1
 
 # # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = ENV("SECRET_KEY")
+SECRET_KEY = ENV("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'gxtx=5weofli7n=rt86h=e1p^3kztw@xtu6i@z^t5$k$3e(j(1'
+# SECRET_KEY = 'gxtx=5weofli7n=rt86h=e1p^3kztw@xtu6i@z^t5$k$3e(j(1'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True

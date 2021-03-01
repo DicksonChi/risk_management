@@ -32,7 +32,8 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 *.zip
-
+# db
+*.sqlite3
 # Translations
 *.dot
 

@@ -1,9 +1,9 @@
 {
     "dev": {
         "aws_region": "eu-west-3",
-        "django_settings": "favorite_things.settings",
+        "django_settings": "risk_management.settings",
         "profile_name": "zappa",
-        "project_name": "favorite-things",
+        "project_name": "risk-management",
         "runtime": "python3.6",
         "s3_bucket": "YOUR BUCKET NAME",
         "vpc_config" : {
