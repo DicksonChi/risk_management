@@ -1,0 +1,13 @@
+FIELD_TYPE_TEXT = 'TEXT'
+FIELD_TYPE_SOLE_NUMBER = 'NUMBER'
+FIELD_TYPE_DATE = 'DATE'
+FIELD_TYPE_ENUM = 'ENUM'
+FIELD_TYPE_CHOICES = (
+    (FIELD_TYPE_TEXT, 'Text'),
+    (FIELD_TYPE_SOLE_NUMBER, 'Number'),
+    (FIELD_TYPE_DATE, 'Date'),
+    (FIELD_TYPE_ENUM, 'Enum'),
+)
+
+SUCCESS_CODE = "010"  # for success
+ERROR_CODE = "020"  # for error_code
