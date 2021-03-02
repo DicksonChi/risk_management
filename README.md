@@ -15,6 +15,7 @@ This project makes use of these dependencies:
 * Django REST framework - REST API
 * VueJs for the frontend development
 * AWS LAMBDA and s3 bucket
+* Postgres RDS
 * Zappa for deployment
 
 
@@ -36,7 +37,7 @@ next time.
 ```
 $ git clone git@github.com:DicksonChi/risk_management.git
 $ cd risk_management
-$ virtualenv -p /usr/bin/python3.9 virtualenv
+$ virtualenv -p /usr/bin/python3.8 virtualenv
 $ source virtualenv/bin/activate
 ```
 
@@ -106,19 +107,46 @@ Provide default settings to your zappa_settings.json file:
 
 Update the settings file in risk_management/risk_management and add zappa_django_utils in the list of apps
 
-Go to your AWS console and create the VPC and then then the RDS and then update the zappa_settings.json file
-```JSON
-    "vpc_config" : {
-            "SubnetIds": [ "your-subnet-1", "your-subnet-2"],
-            "SecurityGroupIds": ["your-security-group"]
-        },
-        "environment_variables": {
-            "AWS_REGION": "YOUR_AWS_REGION",
-            "AWS_SECRET_ACCESS_KEY": "YOUR AWS SECRET KEY IN YOUR .aws/credentials FILE",
-            "AWS_ACCESS_KEY_ID": "YOUR AWS KEY ID IN YOUR .aws/credentials FILE",
-            "SECRET_KEY": "YOUR_SECRET_KEY",
-            "DATABASE_URL": "psql://USER:PASS@RDS_ENDPOINT:5432/DB_NAME"
-        },
+Go to your AWS console and create the VPC and then the RDS 
+
+Make sure you link the VPC and Security groups to the RDS and also to the lambda function where the zipped project is hosted
+
+Then update the zappa_settings.json file
+```json
+{
+  "vpc_config": {
+   "SubnetIds": [
+    "your-subnet-1",
+    "your-subnet-2",
+    "your-subnet-3"
+   ],
+   "SecurityGroupIds": [
+    "your-security-group"
+   ]
+  }
+}
+```
+
+The whole zappa_setting.json should look like this
+```json
+{
+    "dev": {
+        "aws_region": "eu-west-3",
+        "django_settings": "risk_management.settings",
+        "profile_name": "default",
+        "project_name": "risk-management",
+        "runtime": "python3.8",
+        "s3_bucket": "YOUR BUCKET NAME",
+        "timeout_seconds": 900,
+        "manage_roles": false,
+        "role_name": "YOUR ROLE THAT HAS PERSMISSION", // created from aws with your IAM configuration
+        "role_arn": "ROLE ARN",
+        "vpc_config" : {
+            "SubnetIds": ["your-subnet-1", "your-subnet-2", "your-subnet-3"],
+            "SecurityGroupIds": [ "your-security-group" ]
+        }
+    }
+}
 ```
 
 Now run `$ make stage=YOUR_STAGE_NAME backend_deploy`
@@ -128,31 +156,12 @@ you should get this message
   Deploying..
   Your application is now live at https://URI.REGION.amazonaws.com/STAGE_NAME
   ```
-create a new bucket for the static folder and add this to your settings
- ```PYTHON
-  STATIC_ROOT = os.path.join(BASE_DIR, "static")
-
-  AWS_S3_BUCKET_NAME_STATIC = "NEW_BUCKET_NAME"
-  AWS_S3_BUCKET_AUTH_STATIC = True
-  AWS_ACCESS_KEY_ID = "YOUR_KEY_ID"
-  AWS_SECRET_ACCESS_KEY = "YOUR SECRET KEY"
-  AWS_REGION = "YOUR REGION"
-  STATICFILES_STORAGE = "django_s3_storage.storage.StaticS3Storage"
-  AWS_S3_CUSTOM_DOMAIN = "{}.s3.amazonaws.com".format(AWS_S3_BUCKET_NAME_STATIC)
-  STATIC_URL = "https://{}/".format(AWS_S3_CUSTOM_DOMAIN)
-```
 
 Then run the command to update this deployment
 
    ```
      $ make stage=STAGE_NAME backend_update
    ```
-
-Now run this command to collect static for the admin view
-
-  ```
-   $ make collectstatic
-  ```
 
 Now lets create the db. Since we already have the VPC and the RDS setup
 run this command
@@ -176,17 +185,22 @@ After deploying the backend code get the endpoint URL and update the PROD consta
 create the s3 bucket that will collect the static files for the frontend.
 
 Go to the bucket permission and then under the cors configuration copy this code to allow for public access
-  ``` XML
-   <?xml version="1.0" encoding="UTF-8"?>
-    <CORSConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
-    <CORSRule>
-        <AllowedOrigin>*</AllowedOrigin>
-        <AllowedMethod>GET</AllowedMethod>
-        <MaxAgeSeconds>3000</MaxAgeSeconds>
-        <AllowedHeader>Authorization</AllowedHeader>
-    </CORSRule>
-    </CORSConfiguration>
+  ``` json
+   {
+  "Version":"2012-10-17",
+  "Statement":[{
+	"Sid":"PublicReadGetObject",
+        "Effect":"Allow",
+	  "Principal": "*",
+      "Action":["s3:GetObject"],
+      "Resource":["arn:aws:s3:::BUCKET-NAME-GOES-HERE/*"
+      ]
+    }
+  ]
+}
   ```
+
+go to the properties page and specify that this bucket is for hosting a static website
 
 run this command to then deploy the frontend
 

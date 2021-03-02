@@ -2,23 +2,17 @@
     "dev": {
         "aws_region": "eu-west-3",
         "django_settings": "risk_management.settings",
-        "profile_name": "zappa",
+        "profile_name": "default",
         "project_name": "risk-management",
-        "runtime": "python3.6",
+        "runtime": "python3.8",
         "s3_bucket": "YOUR BUCKET NAME",
+        "timeout_seconds": 900,
+        "manage_roles": false,
+        "role_name": "YOUR ROLE THAT HAS PERSMISSION",
+        "role_arn": "ROLE ARN",
         "vpc_config" : {
-            "SubnetIds": [ "your-subnet-1", "your-subnet-2"],
-            "SecurityGroupIds": ["your-security-group"]
-        },
-        "environment_variables": {
-            "AWS_REGION": "YOUR_AWS_REGION",
-            "AWS_SECRET_ACCESS_KEY": "YOUR AWS SECRET KEY IN YOUR .aws/credentials FILE",
-            "AWS_ACCESS_KEY_ID": "YOUR AWS KEY ID IN YOUR .aws/credentials FILE",
-            "SECRET_KEY": "YOUR_SECRET_KEY",
-            "DATABASE_URL": "psql://USER:PASS@RDS_ENDPOINT:5432/DB_NAME"
-        },
-        "use_precompiled_packages": true,
-        "delete_local_zip": true,
-        "exclude": [".idea", ".venv", "node_modules"]
+            "SubnetIds": ["your-subnet-1", "your-subnet-2", "your-subnet-3"],
+            "SecurityGroupIds": [ "your-security-group" ]
+        }
     }
 }

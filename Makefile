@@ -4,7 +4,7 @@
 ENVIRONMENT = set -o allexport; . ./.env; set +o allexport;
 
 # Set the following variable to you project name
-PROJECT_NAME = favorite_things
+PROJECT_NAME = risk_management
 FRONT_END = frontend
 DEFAULT_VIRTUALENV = .venv
 # Possible virtualenv if virtualenvwrapper is used

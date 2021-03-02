@@ -37,8 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     # 'django_extensions',
     'django.contrib.staticfiles',
-    # 'django_s3_storage',
-    # 'zappa_django_utils',
+    'zappa_django_utils',
 
     # App
     'main',
@@ -111,26 +110,24 @@ SECRET_KEY = ENV("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = 'gxtx=5weofli7n=rt86h=e1p^3kztw@xtu6i@z^t5$k$3e(j(1'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 DATABASES = {
-    'default': {
-        # for testing will use postgres when want to o live
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-    # 'default': ENV.db("DB_URL", "psql://USER:PASS@RDS_ENDPOINT:5432/DB_NAME")
     # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    #     'NAME': 'fav_db',
-    #     'USER': 'admin',
-    #     'PASSWORD': 'password',
-    #     'HOST': 'localhost',
-    #     'PORT': 5432,
+    #     # for testing will use postgres when want to o live
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     # }
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'zapdjangodb',
+        'USER': 'zapdjangouser',
+        'PASSWORD': 'df56cdba-e9f0-403c-b57b-db0e4466cc30',
+        'HOST': 'zapdjangodb.czqhim8g0q9a.eu-west-3.rds.amazonaws.com',
+        'PORT': 5432,
+    }
 }
 
 STATIC_URL = '/static/'
@@ -148,6 +145,3 @@ AWS_S3_BUCKET_AUTH_STATIC = True
 AWS_ACCESS_KEY_ID = "YOUR SECRET KEY"
 AWS_SECRET_ACCESS_KEY = "YOUR SECRET KEY"
 AWS_REGION = "YOUR REGION"
-# STATICFILES_STORAGE = "django_s3_storage.storage.StaticS3Storage"
-# AWS_S3_CUSTOM_DOMAIN = "{}.s3.amazonaws.com".format(AWS_S3_BUCKET_NAME_STATIC)
-# STATIC_URL = "https://{}/".format(AWS_S3_CUSTOM_DOMAIN)
