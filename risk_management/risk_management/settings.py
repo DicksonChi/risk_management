@@ -122,10 +122,10 @@ DATABASES = {
     # }
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'zapdjangodb',
-        'USER': 'zapdjangouser',
-        'PASSWORD': 'df56cdba-e9f0-403c-b57b-db0e4466cc30',
-        'HOST': 'zapdjangodb.czqhim8g0q9a.eu-west-3.rds.amazonaws.com',
+        'NAME': ENV("DB_NAME"),
+        'USER': ENV("DB_ADMIN_USER"),
+        'PASSWORD': ENV("DB_PASSWORD"),
+        'HOST': ENV("DB_HOST"),
         'PORT': 5432,
     }
 }
