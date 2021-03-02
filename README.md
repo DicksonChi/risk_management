@@ -11,7 +11,7 @@
 
 This project makes use of these dependencies:
 
-* Python 3.9 - Programming language for backend development
+* Python 3.8 - Programming language for backend development
 * Django REST framework - REST API
 * VueJs for the frontend development
 * AWS LAMBDA and s3 bucket

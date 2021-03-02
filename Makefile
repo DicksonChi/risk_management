@@ -12,7 +12,7 @@ POSSIBLE_VIRTUALENV = $(VIRTUAL_ENV)
 # Use possible virtualenv if it exists and virtualenvwrapper is used, otherwise use default one
 VIRTUALENV = $(if $(wildcard $(POSSIBLE_VIRTUALENV)),$(POSSIBLE_VIRTUALENV),$(DEFAULT_VIRTUALENV))
 
-PYVERSION=3.9
+PYVERSION=3.8
 PIP = $(VIRTUALENV)/bin/pip
 PYTHON = $(VIRTUALENV)/bin/python
 PYTEST = $(VIRTUALENV)/bin/pytest
