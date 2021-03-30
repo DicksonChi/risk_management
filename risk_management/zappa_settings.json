@@ -5,14 +5,14 @@
         "profile_name": "default",
         "project_name": "risk-management",
         "runtime": "python3.8",
-        "s3_bucket": "YOUR BUCKET NAME",
+        "s3_bucket": "risk-management-zappa-bucket",
         "timeout_seconds": 900,
         "manage_roles": false,
-        "role_name": "YOUR ROLE THAT HAS PERSMISSION",
-        "role_arn": "ROLE ARN",
+        "role_name": "ZappaDjangoRole",
+        "role_arn": "arn:aws:iam::367312981166:role/ZappaDjangoRole",
         "vpc_config" : {
-            "SubnetIds": ["your-subnet-1", "your-subnet-2", "your-subnet-3"],
-            "SecurityGroupIds": [ "your-security-group" ]
+            "SubnetIds": ["subnet-9abc8ee1", "subnet-f7c2d99e", "subnet-3996d174"],
+            "SecurityGroupIds": [ "sg-c79bb5a2" ]
         }
     }
 }
