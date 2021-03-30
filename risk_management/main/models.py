@@ -1,5 +1,6 @@
 import uuid
 
+from django.contrib.postgres.fields import HStoreField
 from django.contrib.auth.models import BaseUserManager, AbstractUser
 from django.db import models
 from django.utils import timezone
@@ -113,6 +114,18 @@ class User(AbstractUser):
         return self.email
 
 
+class Risk(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=20)
+    user = models.ForeignKey('main.User', on_delete=models.CASCADE, null=True, related_name="risk_user")
+    risk_type = models.ForeignKey('main.RiskType', blank=True,
+                                  on_delete=models.CASCADE, null=True, related_name="risk_type")
+
+    fields_data = HStoreField()  # this is for the fields
+
+    objects = models.Manager()
+
+
 class RiskType(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=20)
@@ -138,6 +151,7 @@ class Field(models.Model):
     field_type = models.CharField(max_length=31, choices=FIELD_TYPE_CHOICES)
     date_added = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
+    options_data = HStoreField(blank=True, null=True)  # For ENUM fields
 
     objects = models.Manager()
 

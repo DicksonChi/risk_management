@@ -26,6 +26,42 @@
               <template slot="selection"></template>
             </multiselect>
           </div>
+          <label v-if="field_type == 'ENUM'"
+            title="Please you are required to enter the value"
+            >Options</label
+          ><br />
+          <div class="form-group "  v-if="field_type == 'ENUM'">
+            <div
+              class="row"
+            >
+              <input
+                type="text"
+                placeholder="option one"
+                class="form-control"
+                v-model="option_one"
+              />
+            </div>
+            <div
+              class="row"
+            >
+              <input
+                type="text"
+                placeholder="option two"
+                class="form-control"
+                v-model="option_two"
+              />
+            </div>
+            <div
+              class="row"
+            >
+              <input
+                type="text"
+                placeholder="option 3"
+                class="form-control"
+                v-model="option_three"
+              />
+            </div>
+          </div>
           <div class="form-group">
             <button type="submit" class="btn btn-outline-info">Add</button>
             <button
@@ -41,7 +77,7 @@
     </modal>
     <button
       class="btn btn-lg"
-      title="add a new risk type"
+      title="add a new field"
       @click="showAddRiskTypeModal"
     >
       Add Field <i class="fa fa-plus"></i>
@@ -83,6 +119,12 @@ export default {
       const field = {
         name: this.name,
         field_type: this.field_type,
+        options_data: {
+          option_one: this.option_one,
+          option_two: this.option_two,
+          option_three: this.option_three 
+        
+        }
       };
       api_serv
         .createField(field)
@@ -105,7 +147,10 @@ export default {
       isAddFieldModalVisible: false,
       name: "",
       field_type: "",
-      options:['TEXT', 'NUMBER', 'DATE', 'ENUM']
+      options:['TEXT', 'NUMBER', 'DATE', 'ENUM'],
+      option_one: "",
+      option_two: "",
+      option_three: ""
     };
   }
 };

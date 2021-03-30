@@ -23,4 +23,16 @@ urlpatterns = [  # pylint: disable=invalid-name
     ),
     path('field/add/', views.FieldView.as_view(), name='add_field'),
     path('field/fetch/all/', views.AllFieldRetrieveView.as_view(), name='fetch_all_field'),
+    path('risk/add/', views.RiskView.as_view(), name='add_risk'),
+    path('risk/<uuid:user_id>/fetch/', views.AllRiskRetrieveView.as_view(), name='fetch_all_risk'),
+    path(
+        'risk/<uuid:id>/fetch/single/',
+        views.RiskRetrieveView.as_view(),
+        name='fetch_single_risk'
+    ),
+    path(
+        'risk/<uuid:id>/update/single/',
+        views.RiskRetrieveUpdateView.as_view(),
+        name='update_single_risk'
+    ),
 ]

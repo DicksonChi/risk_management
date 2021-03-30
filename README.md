@@ -21,7 +21,7 @@ This project makes use of these dependencies:
 
 ## Test Description and Approach
 This is a Single Page Application created with VueJs and consumes a REST API created with Django
-to show the list of risk types, and the list of fields.  
+to show the list of risks, risk types, and the list of fields.  
 
 This solution can allow for usage by different users without using 
 authentication but just a simple id that is saved on their browser once 
@@ -33,6 +33,10 @@ next time.
   
 * The users can add many Risk Type and also add any field to the list of already existing fields
 
+* The user can then add many Risks and assign to them a risk type.
+
+* When the users click on the edit button on any risk, they can now see the fields that are part of that
+risk type that is selected for the risk. They can then edit those fields.
 ## Installation
 ```
 $ git clone git@github.com:DicksonChi/risk_management.git

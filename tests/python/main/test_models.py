@@ -2,7 +2,7 @@ import factory
 from django.test import TestCase
 
 from main.constants import FIELD_TYPE_TEXT
-from main.models import User, Field, RiskType
+from main.models import User, Field, RiskType, Risk
 
 
 class UserFactory(factory.django.DjangoModelFactory):
@@ -26,6 +26,14 @@ class RiskTypeFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = RiskType
+
+
+class RiskFactory(factory.django.DjangoModelFactory):
+    name = 'Test Risk'
+    risk_type = factory.SubFactory(RiskTypeFactory)
+
+    class Meta:
+        model = Risk
 
 
 class UserModelsTests(TestCase):

@@ -1,6 +1,6 @@
 import axios from "axios";
 import api_url from "./constants.js";
-const API_URL = api_url.PROD; // change when in production to api_url.PROD
+const API_URL = api_url.DEV; // change when in production to api_url.PROD
 export class APIService {
   constructor() {}
 
@@ -27,9 +27,28 @@ export class APIService {
     const response = axios.get(url);
     return response;
   }
+  // risk retieval
+  getRisk(user_id) {
+    const url = `${API_URL}/api/risk/${user_id}/fetch/`;
+    const response = axios.get(url);
+    return response;
+  }
+  
+  getSingleRisk(risk_id) {
+    const url = `${API_URL}/api/risk/${risk_id}/fetch/single/`;
+    const response = axios.get(url);
+    return response;
+  }
+
   getFields() {
     const url = `${API_URL}/api/field/fetch/all/`;
     const response = axios.get(url);
+    return response;
+  }
+
+  createRisk(risk_data) {
+    const url = `${API_URL}/api/risk/add/`;
+    const response = axios.post(url, risk_data);
     return response;
   }
 
@@ -48,6 +67,12 @@ export class APIService {
   updateRiskType(risk_type_update_data) {
     const url = `${API_URL}/api/risk-type/${risk_type_update_data.id}/update/single/`;
     const response = axios.put(url, risk_type_update_data);
+    return response;
+  }
+
+  updateRisk(risk_update_data) {
+    const url = `${API_URL}/api/risk/${risk_update_data.id}/update/single/`;
+    const response = axios.put(url, risk_update_data);
     return response;
   }
 

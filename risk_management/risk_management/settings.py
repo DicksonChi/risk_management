@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django_extensions',
     'django.contrib.staticfiles',
+    'django.contrib.postgres',
     'zappa_django_utils',
 
     # App

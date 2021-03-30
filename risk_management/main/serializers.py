@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from main.models import RiskType, Field, User
+from main.models import RiskType, Field, User, Risk
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -15,6 +15,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
 class FieldSerializer(serializers.ModelSerializer):
     id = serializers.CharField(required=False)
+    options_data = serializers.JSONField(required=False, allow_null=True)  # only required if it is an enum field
 
     class Meta:
         """Meta class for the field serializer."""
@@ -66,3 +67,15 @@ class RiskTypeSerializer(serializers.ModelSerializer):
             risk_type.fields.add(field_obj)
 
         return risk_type
+
+
+class RiskSerializer(serializers.ModelSerializer):
+    id = serializers.CharField(read_only=True, required=False)
+    risk_type = serializers.PrimaryKeyRelatedField(queryset=RiskType.objects.all(), required=False)
+    fields_data = serializers.JSONField(required=False)
+
+    class Meta:
+        """Meta class for the risk type serializer."""
+
+        model = Risk
+        fields = ('id', 'name', 'user', 'risk_type', 'fields_data')

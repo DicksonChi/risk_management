@@ -4,6 +4,16 @@
 
     <!-- for the risk types-->
     <div class="row block">
+
+      <div class="col-lg-12 col-sm-12">
+        <h3 align="center">Risks</h3>
+        <Risks
+          v-bind:risks="risks"
+          v-bind:risk_types="risk_types"
+          v-on:update-risk="updateRiskType"
+        />
+      </div>
+
       <div class="col-lg-12 col-sm-12">
         <h3 align="center">Risk Type</h3>
         <RiskTypes
@@ -27,6 +37,7 @@
 
 <script>
 import RiskTypes from "../components/RiskType";
+import Risks from "../components/Risk";
 import Fields from "../components/Field";
 import Header from "../components/Header";
 import { APIService } from "../BackendApiService.js";
@@ -35,11 +46,13 @@ export default {
   components: {
     Header,
     RiskTypes,
+    Risks,
     Fields
   },
   data() {
     return {
       risk_types: [],
+      risks: [],
       all_fields: [],
       user_id: null,
     };
@@ -47,6 +60,16 @@ export default {
   created() {
     this.user_id = localStorage.user_id;
     let api_serv = new APIService();
+    api_serv
+        .getRisk(this.user_id)
+        .then(res => {
+          if (res.data.code == "010") {
+            this.risks = res.data.risks;
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     api_serv
         .getRiskType(this.user_id)
         .then(res => {
@@ -72,6 +95,16 @@ export default {
   methods: {
     updateRiskType() {
       let api_serv = new APIService();
+      api_serv
+        .getRisk(this.user_id)
+        .then(res => {
+          if (res.data.code == "010") {
+            this.risks = res.data.risks;
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
       api_serv
         .getRiskType(this.user_id)
         .then(res => {

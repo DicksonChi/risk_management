@@ -4,14 +4,16 @@ import json
 
 from django.test import TestCase
 from django.urls import reverse
-from rest_framework import status
+from rest_framework import status, test
 
 from main.constants import FIELD_TYPE_TEXT
-from main.models import User, RiskType, Field
+from main.models import User, RiskType, Field, Risk
 from tests.python.main.test_models import UserFactory, FieldFactory, RiskTypeFactory
 
+from python.main.test_models import RiskFactory
 
-class UserTests(TestCase):
+
+class UserTests(test.APITestCase):
 
     def setUp(self):
         self.user = User.objects.create_user(
@@ -201,3 +203,68 @@ class FieldTests(TestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data.get("code"), "010")
         self.assertEqual(Field.objects.count(), 1)
+
+
+class RiskTests(TestCase):
+
+    def setUp(self):
+        self.field = FieldFactory()
+        user = UserFactory(email='testuser2@test.com')
+        self.risk_type = RiskTypeFactory(user=user)
+        self.risk = RiskFactory(fields_data='', user=user)
+
+    def test_get_risk_list(self):
+        response = self.client.get(
+            reverse('main:fetch_all_risk', kwargs={'user_id': self.risk.user.id})
+        )
+        self.assertEqual(response.data.get("code"), "010")
+        self.assertEqual(isinstance(response.data.get("risks"), list), True)
+
+    def test_add_risk(self):
+        user = self.risk.user.id
+        # create with existing field
+        response = self.client.post(
+            reverse('main:add_risk'),
+            json.dumps({
+                'user': str(user),
+                'name': "Automobile Risk",
+                'risk_type': str(self.risk_type.id),
+                'fields_data': {'field 1': 'data'}
+            }),
+            content_type="application/json"
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data.get("code"), "010")
+        risk = Risk.objects.last()
+        self.assertEqual(risk.name, "Automobile Risk")
+
+        response = self.client.get(
+            reverse('main:fetch_all_risk', kwargs={'user_id': self.risk.user.id})
+        )
+        self.assertEqual(response.data.get("code"), "010")
+        self.assertEqual(isinstance(response.data.get("risks"), list), True)
+
+    def test_update_risk_no_field_id(self):
+        # create with wrong id
+        response = self.client.put(
+            reverse('main:update_single_risk', kwargs={'id': uuid.uuid4()}),
+            json.dumps({
+                'name': "Automobile Risk",
+                'fields_data': {'fields 1': 'update'}
+            }),
+            content_type="application/json"
+        )
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        # create with existing field
+        response = self.client.put(
+            reverse('main:update_single_risk', kwargs={'id': self.risk.id}),
+            json.dumps({
+                'name': "Automobile Risk",
+                'fields_data': {'fields 1': 'update'}
+            }),
+            content_type="application/json"
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data.get("code"), "010")
+        risk = Risk.objects.last()
+        self.assertEqual(risk.fields_data, {'fields 1': 'update'})

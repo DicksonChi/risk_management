@@ -5,8 +5,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from main.constants import SUCCESS_CODE, ERROR_CODE
-from main.models import RiskType, Field, User
-from main.serializers import UserSerializer, RiskTypeSerializer, FieldSerializer
+from main.models import RiskType, Field, User, Risk
+from main.serializers import UserSerializer, RiskTypeSerializer, FieldSerializer, RiskSerializer
 
 
 class UserCreateView(APIView):
@@ -171,6 +171,97 @@ class FieldView(APIView):
         response = {
             'code': ERROR_CODE,
             'errors': serializer.errors
+        }
+
+        return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+
+class RiskRetrieveView(generics.RetrieveAPIView):
+    queryset = Risk.objects.all()
+    serializer_class = RiskSerializer
+    lookup_field = 'id'
+
+    def get(self, request, *args, **kwargs):
+        """Handle retrieving single risk type."""
+        res = super(RiskRetrieveView, self).get(request, *args, **kwargs)
+        data = res.data
+        data['code'] = SUCCESS_CODE
+        return Response(data)
+
+
+class AllRiskRetrieveView(generics.ListAPIView):
+    serializer_class = RiskSerializer
+
+    def list(self, request, *args, **kwargs):
+        """List the list of risk type."""
+        queryset = self.filter_queryset(self.get_queryset())
+
+        serializer = self.get_serializer(queryset, many=True)
+        res = {
+            'code': SUCCESS_CODE,
+            'risks': serializer.data
+        }
+        return Response(res)
+
+    def get_queryset(self):
+        """Queryset of all the risk type for a user."""
+        user_id = self.kwargs['user_id']
+        get_object_or_404(User, pk=user_id)
+        return Risk.objects.filter(user_id=user_id)
+
+
+class RiskView(APIView):
+    serializer_class = RiskSerializer
+
+    def post(self, request):
+        """Handle the posting of data."""
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            response = {
+                'code': SUCCESS_CODE,
+                'message': 'Success'
+            }
+            return Response(response, status=status.HTTP_201_CREATED)
+
+        response = {
+            'code': ERROR_CODE,
+            'errors': serializer.errors
+        }
+
+        return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+
+class RiskRetrieveUpdateView(generics.UpdateAPIView):
+    queryset = Risk.objects.all()
+    serializer_class = RiskSerializer
+    lookup_field = 'id'
+
+    def update(self, request, *args, **kwargs):
+        """Update the particular record."""
+        partial = kwargs.pop('partial', False)
+        try:
+            instance = self.get_object()
+        except Http404:
+            response = {
+                "code": ERROR_CODE,
+                "errors": "not found"
+            }
+            return Response(response, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        if serializer.is_valid():
+            serializer.save()
+            response = {
+                "code": SUCCESS_CODE,
+                "status": "Updated the record"
+            }
+
+            return Response(response, status=status.HTTP_200_OK)
+
+        response = {
+            "code": ERROR_CODE,
+            "errors": serializer.errors
         }
 
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
